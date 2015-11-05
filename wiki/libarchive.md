@@ -1,1 +1,0 @@
-libarchive.a is needed.
