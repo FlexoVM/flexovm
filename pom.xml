@@ -9,21 +9,21 @@
     <version>7</version>
   </parent>
 
-  <groupId>org.robovm</groupId>
-  <version>1.8.0</version>
-  <artifactId>robovm-parent</artifactId>
-  <name>RoboVM</name>
+  <groupId>org.flexovm</groupId>
+  <version>1.8.0-SNAPSHOT</version>
+  <artifactId>flexovm-parent</artifactId>
+  <name>FlexoVM</name>
   <packaging>pom</packaging>
-  <url>http://www.robovm.com</url>
+  <url>http://www.flexovm.org</url>
   <description>
-    The RoboVM compiler translates Java bytecode into native ARM or x86 code. Apps run directly on the CPU.
+    The FlexoVM compiler translates Java bytecode into native ARM or x86 code. Apps run directly on the CPU.
     No interpreter or virtual machine involved.
   </description>
   <inceptionYear>2012</inceptionYear>
 
   <organization>
-    <name>RoboVM AB</name>
-    <url>http://www.robovm.com</url>
+    <name>FlexoVM</name>
+    <url>http://www.flexovm.org</url>
   </organization>
 
   <developers>
@@ -39,15 +39,15 @@
 
 
   <scm>
-    <url>https://github.com/robovm/robovm-core</url>
-    <connection>scm:git:git://github.com/robovm/robovm-core.git</connection>
-    <developerConnection>scm:git:git@github.com:robovm/robovm-core.git</developerConnection>
-    <tag>robovm-1.8.0</tag>
+    <url>https://github.com/flexovm/flexovm</url>
+    <connection>scm:git:git://github.com/flexovm/flexovm.git</connection>
+    <developerConnection>scm:git:git@github.com:flexovm/flexovm.git</developerConnection>
+    <tag>flexovm-1.8.0-SNAPSHOT</tag>
   </scm>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/robovm/robovm/issues</url>
+    <url>https://github.com/flexovm/flexovm/issues</url>
   </issueManagement>
 
   <dependencies>

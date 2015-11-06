@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.robovm</groupId>
-    <artifactId>robovm-parent</artifactId>
-    <version>1.8.0</version>
+    <groupId>org.flexovm</groupId>
+    <artifactId>flexovm-parent</artifactId>
+    <version>1.8.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>robovm-compiler</artifactId>
-  <name>RoboVM Compiler</name>
+  <artifactId>flexovm-compiler</artifactId>
+  <name>FlexoVM Compiler</name>
   <packaging>jar</packaging>
 
   <licenses>
@@ -78,23 +78,23 @@
       <version>5.0.3</version>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-llvm</artifactId>
+      <groupId>org.flexovm</groupId>
+      <artifactId>flexovm-llvm</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-libimobiledevice</artifactId>
+      <groupId>org.flexovm</groupId>
+      <artifactId>flexovm-libimobiledevice</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-soot</artifactId>
-      <version>2.5.0-1</version>
+      <groupId>org.flexovm</groupId>
+      <artifactId>flexovm-soot</artifactId>
+      <version>2.5.0-2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-rt</artifactId>
+      <groupId>org.flexovm</groupId>
+      <artifactId>flexovm-rt</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -117,7 +117,7 @@
       </resource>
       <resource>
         <directory>src/main/filtered-resources</directory>
-        <targetPath>META-INF/robovm</targetPath>
+        <targetPath>META-INF/flexovm</targetPath>
         <filtering>true</filtering>
       </resource>
     </resources>

@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.robovm</groupId>
-    <artifactId>robovm-parent</artifactId>
-    <version>1.8.0</version>
+    <groupId>org.flexovm</groupId>
+    <artifactId>flexovm-parent</artifactId>
+    <version>1.8.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>robovm-objc</artifactId>
-  <name>RoboVM Objective-C Bridge</name>
+  <artifactId>flexovm-objc</artifactId>
+  <name>FlexoVM Objective-C Bridge</name>
   <packaging>jar</packaging>
 
   <licenses>
@@ -22,8 +22,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-rt</artifactId>
+      <groupId>org.flexovm</groupId>
+      <artifactId>flexovm-rt</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

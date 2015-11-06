@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.robovm</groupId>
-    <artifactId>robovm-parent</artifactId>
-    <version>1.8.0</version>
+    <groupId>org.flexovm</groupId>
+    <artifactId>flexovm-parent</artifactId>
+    <version>1.8.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>robovm-llvm</artifactId>
-  <name>RoboVM LLVM Bindings</name>
+  <artifactId>flexovm-llvm</artifactId>
+  <name>FlexoVM LLVM Bindings</name>
   <packaging>jar</packaging>
 
   <licenses>

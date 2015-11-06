@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.robovm</groupId>
-    <artifactId>robovm-cacerts-parent</artifactId>
-    <version>1.8.0</version>
+    <groupId>org.flexovm</groupId>
+    <artifactId>flexovm-cacerts-parent</artifactId>
+    <version>1.8.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>robovm-cacerts-full</artifactId>
-  <name>RoboVM cacerts full</name>
+  <artifactId>flexovm-cacerts-full</artifactId>
+  <name>FlexoVM cacerts full</name>
   <packaging>jar</packaging>
 
 </project>
