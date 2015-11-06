@@ -480,7 +480,7 @@ public abstract class AbstractTarget implements Target {
 
         Map<String, String> env = new HashMap<>(launchParameters.getEnvironment() != null 
                 ? launchParameters.getEnvironment() : Collections.<String, String>emptyMap());
-        env.put("ROBOVM_LAUNCH_MODE", config.isDebug() ? "debug" : "release");
+        env.put("FLEXOVM_LAUNCH_MODE", config.isDebug() ? "debug" : "release");
         launchParameters.setEnvironment(env);
         
         return doLaunch(launchParameters);
@@ -535,10 +535,11 @@ public abstract class AbstractTarget implements Target {
                         if (entry.getName().toLowerCase().endsWith(".class")) {
                             continue;
                         }
-                        if (entry.getName().startsWith("META-INF/robovm/")) {
-                            // Don't include anything under META-INF/robovm/
+                        if (entry.getName().startsWith("META-INF/flexovm/")) {
+                            // Don't include anything under META-INF/flexovm/
                             continue;
                         }
+
                         ZipEntry newEntry = new ZipEntry(entry.getName());
                         newEntry.setTime(entry.getTime());
                         out.putNextEntry(newEntry);
@@ -565,10 +566,14 @@ public abstract class AbstractTarget implements Target {
                         continue;
                     }
                     String entryName = f.getAbsolutePath().substring(basePath.length() + 1);
-                    if (entryName.startsWith("META-INF/robovm/")) {
-                        // Don't include anything under META-INF/robovm/
+                    if (entryName.startsWith("META-INF/flexovm/")) {
+                        // Don't include anything under META-INF/flexovm/
                         continue;
                     }
+                    if (f.getAbsolutePath().equals(output.getAbsolutePath())) {
+                        continue;
+                    }
+
                     ZipEntry newEntry = new ZipEntry(entryName);
                     newEntry.setTime(f.lastModified());
                     out.putNextEntry(newEntry);

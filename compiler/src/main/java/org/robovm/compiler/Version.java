@@ -28,7 +28,7 @@ import org.apache.commons.io.IOUtils;
 public class Version {
 
     private static String version = null;
-    private static String PROPERTIES_RESOURCE = "/META-INF/robovm/version.properties";
+    private static String PROPERTIES_RESOURCE = "/META-INF/flexovm/version.properties";
 
     /**
      * Returns the version number of the compiler by reading the <code>version.properties</code>

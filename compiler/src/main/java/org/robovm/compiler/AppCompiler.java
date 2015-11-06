@@ -446,8 +446,6 @@ public class AppCompiler {
     }
 
     private void compile() throws IOException {
-        updateCheck();
-
         Set<Clazz> linkClasses = compile(getRootClasses(), true, null);
 
         if (Thread.currentThread().isInterrupted()) {
@@ -859,7 +857,7 @@ public class AppCompiler {
 
     private static void printUsageAndExit(String errorMessage, List<Plugin> plugins) {
         if (errorMessage != null) {
-            System.err.format("robovm: %s\n", errorMessage);
+            System.err.format("flexovm: %s\n", errorMessage);
         }
         List<String> targets = new ArrayList<>();
         targets.add(ConsoleTarget.TYPE);
@@ -870,8 +868,8 @@ public class AppCompiler {
             }
         }
         // @formatter:off 
-        System.err.println("Usage: robovm [-options] class [run-args]");
-        System.err.println("   or  robovm [-options] -jar jarfile [run-args]");
+        System.err.println("Usage: flexovm [-options] class [run-args]");
+        System.err.println("   or  flexovm [-options] -jar jarfile [run-args]");
         System.err.println("Options:");
         
         System.err.println("  -bootclasspath <list> ");
@@ -879,21 +877,21 @@ public class AppCompiler {
         System.err.println("  -bcp <list>           : separated list of directories, JAR archives, and ZIP \n" 
                          + "                        archives to search for class files. Used to locate the \n" 
                          + "                        java.* and javax.* classes. Default is \n"
-                         + "                        <robovm-home>/lib/robovm-rt.jar.");
+                         + "                        <flexovm-home>/lib/flexovm-rt.jar.");
         System.err.println("  -cp <list>            ");
         System.err.println("  -classpath <list>     : separated list of directories, JAR archives, and ZIP \n" 
                          + "                        archives to search for class files.");
         System.err.println("  -cache <dir>          Directory where cached compiled class files will be placed.\n" 
-                         + "                        Default is ~/.robovm/cache");
+                         + "                        Default is ~/.flexovm/cache");
         System.err.println("  -clean                Compile class files even if a compiled version already \n" 
                          + "                        exists in the cache.");
         System.err.println("  -d <dir>              Install the generated executable and other files in <dir>.\n" 
                          + "                        Default is <wd>/<executableName>. Ignored if -run is specified.");
         System.err.println("  -cc <path>            Path to the c compiler binary. gcc and clang are supported.");
-        System.err.println("  -home <dir>           Directory where RoboVM runtime has been installed.\n"
-                         + "                        Default is $ROBOVM_HOME. If not set the following paths\n" 
-                         + "                        will be searched: ~/Applications/robovm/, ~/.robovm/home/,\n" 
-                         + "                        /usr/local/lib/robovm/, /opt/robovm/, /usr/lib/robovm/.");
+        System.err.println("  -home <dir>           Directory where FlexoVM runtime has been installed.\n"
+                         + "                        Default is $FLEXOVM_HOME. If not set the following paths\n" 
+                         + "                        will be searched: ~/Applications/flexovm/, ~/.flexovm/home/,\n" 
+                         + "                        /usr/local/lib/flexovm/, /opt/flexovm/, /usr/lib/flexovm/.");
         System.err.println("  -tmp <dir>            Directory where temporary files will be placed during\n"
                          + "                        compilation. By default a new dir will be created under\n" 
                          + "                        ${java.io.tmpdir}.");
@@ -939,7 +937,7 @@ public class AppCompiler {
                          + "                        file for iOS apps). The archive will be created in the\n" 
                          + "                        install dir specified using -d.");
         System.err.println("  -debug                Generates debug information");
-        System.err.println("  -use-debug-libs       Links against debug versions of the RoboVM VM libraries");
+        System.err.println("  -use-debug-libs       Links against debug versions of the FlexoVM VM libraries");
         System.err.println("  -libs <list>          : separated list of static library files (.a), object\n"
                          + "                        files (.o) and system libraries that should be included\n" 
                          + "                        when linking the final executable.");
@@ -971,7 +969,7 @@ public class AppCompiler {
         System.err.println("  -cacerts <value>      Use the specified cacerts file. Allowed value are 'none',\n" 
                          + "                        'full'. Default is 'full' but no cacerts will be included\n" 
                          + "                        unless the code actually needs them.");
-        System.err.println("  -skiprt               Do not add default robovm-rt.jar to bootclasspath");
+        System.err.println("  -skiprt               Do not add default flexovm-rt.jar to bootclasspath");
         System.err.println("  -config <file>        Reads the specified configuration XML file. Values set in\n" 
                          + "                        the file will override values set earlier in the command\n" 
                          + "                        line. Later options will override values set in the XML file.\n" 
@@ -1051,49 +1049,6 @@ public class AppCompiler {
         @Override
         public void run() {
             result = fetchJson(address);
-        }
-    }
-
-    /**
-     * Performs an update check. If a newer version of RoboVM is available a
-     * message will be printed to the log. The update check is also used to
-     * gather some anonymous usage statistics.
-     */
-    private void updateCheck() {
-        try {
-            String uuid = getInstallUuid();
-            if (uuid == null) {
-                return;
-            }
-            long lastCheckTime = getLastUpdateCheckTime();
-            if (System.currentTimeMillis() - lastCheckTime < 6 * 60 * 60 * 1000) {
-                // Only check for an update once every 6 hours
-                return;
-            }
-            updateLastUpdateCheckTime();
-            String osName = System.getProperty("os.name", "Unknown");
-            String osArch = System.getProperty("os.arch", "Unknown");
-            String osVersion = System.getProperty("os.version", "Unknown");
-            UpdateChecker t = new UpdateChecker("http://download.robovm.org/version?"
-                    + "uuid=" + URLEncoder.encode(uuid, "UTF-8") + "&"
-                    + "version=" + URLEncoder.encode(Version.getVersion(), "UTF-8") + "&"
-                    + "osName=" + URLEncoder.encode(osName, "UTF-8") + "&"
-                    + "osArch=" + URLEncoder.encode(osArch, "UTF-8") + "&"
-                    + "osVersion=" + URLEncoder.encode(osVersion, "UTF-8"));
-            t.start();
-            t.join(5 * 1000); // Wait for a maximum of 5 seconds
-            JSONObject result = t.result;
-            if (result != null) {
-                String version = (String) result.get("version");
-                if (version != null && Version.isOlderThan(version)) {
-                    config.getLogger().info("A new version of RoboVM is available. "
-                            + "Current version: %s. New version: %s.", Version.getVersion(), version);
-                }
-            }
-        } catch (Throwable t) {
-            if (config.getHome().isDev()) {
-                t.printStackTrace();
-            }
         }
     }
 

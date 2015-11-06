@@ -184,7 +184,7 @@ public class Config {
 
     private Home home = null;
     private File tmpDir;
-    private File cacheDir = new File(System.getProperty("user.home"), ".robovm/cache");
+    private File cacheDir = new File(System.getProperty("user.home"), ".flexovm/cache");
     private File ccBinPath = null;
 
     private boolean clean = false;
@@ -353,7 +353,7 @@ public class Config {
     public File getTmpDir() {
         if (tmpDir == null) {
             try {
-                tmpDir = File.createTempFile("robovm", ".tmp");
+                tmpDir = File.createTempFile("flexovm", ".tmp");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -648,7 +648,7 @@ public class Config {
                     Enumeration<? extends ZipEntry> entries = zipFile.entries();
                     while (entries.hasMoreElements()) {
                         ZipEntry entry = entries.nextElement();
-                        if (entry.getName().startsWith("META-INF/robovm/") && !entry.isDirectory()) {
+                        if (entry.getName().startsWith("META-INF/flexovm/") && !entry.isDirectory()) {
                             File f = new File(target, entry.getName());
                             f.getParentFile().mkdirs();
                             try (InputStream in = zipFile.getInputStream(entry);
@@ -697,8 +697,8 @@ public class Config {
 
     private void mergeConfigsFromClasspath() throws IOException {
         List<String> dirs = Arrays.asList(
-                "META-INF/robovm/" + os + "/" + sliceArch,
-                "META-INF/robovm/" + os);
+                "META-INF/flexovm/" + os + "/" + sliceArch,
+                "META-INF/flexovm/" + os);
 
         // The algorithm below preserves the order of config data from the
         // classpath. Last the config from this object is added.
@@ -707,8 +707,8 @@ public class Config {
         Config config = new Config();
         for (Path path : clazzes.getPaths()) {
             for (String dir : dirs) {
-                if (path.contains(dir + "/robovm.xml")) {
-                    File configXml = new File(new File(extractIfNeeded(path), dir), "robovm.xml");
+                if (path.contains(dir + "/flexovm.xml")) {
+                    File configXml = new File(new File(extractIfNeeded(path), dir), "flexovm.xml");
                     Builder builder = new Builder();
                     builder.read(configXml);
                     mergeConfig(builder.config, config);
@@ -917,9 +917,9 @@ public class Config {
             }
             binDir = new File(homeDir, "bin");
             libVmDir = new File(homeDir, "lib/vm");
-            rtPath = new File(homeDir, "lib/robovm-rt.jar");
+            rtPath = new File(homeDir, "lib/flexovm-rt.jar");
             cacertsPath = new HashMap<Cacerts, File>();
-            cacertsPath.put(Cacerts.full, new File(homeDir, "lib/robovm-cacerts-full.jar"));
+            cacertsPath.put(Cacerts.full, new File(homeDir, "lib/flexovm-cacerts-full.jar"));
         }
 
         private Home(File devDir, File binDir, File libVmDir, File rtPath) {
@@ -928,7 +928,7 @@ public class Config {
             this.rtPath = rtPath;
             cacertsPath = new HashMap<Cacerts, File>();
             cacertsPath.put(Cacerts.full, new File(devDir,
-                    "cacerts/full/target/robovm-cacerts-full-" + Version.getVersion() + ".jar"));
+                    "cacerts/full/target/flexovm-cacerts-full-" + Version.getVersion() + ".jar"));
             this.dev = true;
         }
 
@@ -953,29 +953,29 @@ public class Config {
         }
 
         public static Home find() {
-            // Check if ROBOVM_DEV_ROOT has been set. If set it should be
-            // pointing at the root of a complete RoboVM source tree.
-            if (System.getenv("ROBOVM_DEV_ROOT") != null) {
-                File dir = new File(System.getenv("ROBOVM_DEV_ROOT"));
+            // Check if FLEXOVM_DEV_ROOT has been set. If set it should be
+            // pointing at the root of a complete FlexoVM source tree.
+            if (System.getenv("FLEXOVM_DEV_ROOT") != null) {
+                File dir = new File(System.getenv("FLEXOVM_DEV_ROOT"));
                 return validateDevRootDir(dir);
             }
-            if (System.getProperty("ROBOVM_DEV_ROOT") != null) {
-                File dir = new File(System.getProperty("ROBOVM_DEV_ROOT"));
+            if (System.getProperty("FLEXOVM_DEV_ROOT") != null) {
+                File dir = new File(System.getProperty("FLEXOVM_DEV_ROOT"));
                 return validateDevRootDir(dir);
             }
 
-            if (System.getenv("ROBOVM_HOME") != null) {
-                File dir = new File(System.getenv("ROBOVM_HOME"));
+            if (System.getenv("FLEXOVM_HOME") != null) {
+                File dir = new File(System.getenv("FLEXOVM_HOME"));
                 return new Home(dir);
             }
 
             List<File> candidates = new ArrayList<File>();
             File userHome = new File(System.getProperty("user.home"));
-            candidates.add(new File(userHome, "Applications/robovm"));
-            candidates.add(new File(userHome, ".robovm/home"));
-            candidates.add(new File("/usr/local/lib/robovm"));
-            candidates.add(new File("/opt/robovm"));
-            candidates.add(new File("/usr/lib/robovm"));
+            candidates.add(new File(userHome, "Applications/flexovm"));
+            candidates.add(new File(userHome, ".flexovm/home"));
+            candidates.add(new File("/usr/local/lib/flexovm"));
+            candidates.add(new File("/opt/flexovm"));
+            candidates.add(new File("/usr/lib/flexovm"));
 
             for (File dir : candidates) {
                 if (dir.exists()) {
@@ -983,12 +983,12 @@ public class Config {
                 }
             }
 
-            throw new IllegalArgumentException("ROBOVM_HOME not set and no RoboVM "
+            throw new IllegalArgumentException("FLEXOVM_HOME not set and no FlexoVM "
                     + "installation found in " + candidates);
         }
 
         public static void validate(File dir) {
-            String error = "Path " + dir + " is not a valid RoboVM install directory: ";
+            String error = "Path " + dir + " is not a valid FlexoVM install directory: ";
             // Check for required dirs and match the compiler version with our
             // version.
             if (!dir.exists()) {
@@ -1011,14 +1011,14 @@ public class Config {
             if (!libVmDir.exists() || !libVmDir.isDirectory()) {
                 throw new IllegalArgumentException(error + "lib/vm/ missing or invalid");
             }
-            File rtJarFile = new File(libDir, "robovm-rt.jar");
+            File rtJarFile = new File(libDir, "flexovm-rt.jar");
             if (!rtJarFile.exists() || !rtJarFile.isFile()) {
                 throw new IllegalArgumentException(error
-                        + "lib/robovm-rt.jar missing or invalid");
+                        + "lib/flexovm-rt.jar missing or invalid");
             }
 
             // Compare the version of this compiler with the version of the
-            // robovm-rt.jar in the home dir. They have to match.
+            // flexovm-rt.jar in the home dir. They have to match.
             try {
                 String thisVersion = Version.getVersion();
                 String thatVersion = getImplementationVersion(rtJarFile);
@@ -1033,7 +1033,7 @@ public class Config {
         }
 
         private static Home validateDevRootDir(File dir) {
-            String error = "Path " + dir + " is not a valid RoboVM source tree: ";
+            String error = "Path " + dir + " is not a valid FlexoVM source tree: ";
             // Check for required dirs.
             if (!dir.exists()) {
                 throw new IllegalArgumentException(error + "no such path");
@@ -1052,7 +1052,7 @@ public class Config {
                 throw new IllegalArgumentException(error + "bin/ missing or invalid");
             }
 
-            String rtJarName = "robovm-rt-" + Version.getVersion() + ".jar";
+            String rtJarName = "flexovm-rt-" + Version.getVersion() + ".jar";
             File rtJar = new File(dir, "rt/target/" + rtJarName);
             File rtClasses = new File(dir, "rt/target/classes/");
             File rtSource = rtJar;
@@ -1463,11 +1463,11 @@ public class Config {
         /**
          * Reads properties from a project basedir. If {@code isTest} is
          * {@code true} this method will first attempt to load a
-         * {@code robovm.test.properties} file in {@code basedir}.
+         * {@code flexovm.test.properties} file in {@code basedir}.
          * <p>
          * If no test specific file is found or if {@code isTest} is
          * {@code false} this method attempts to load a
-         * {@code robovm.properties} and a {@code robovm.local.properties} file
+         * {@code flexovm.properties} and a {@code flexovm.local.properties} file
          * in {@code basedir} and merges them so that properties from the local
          * file (if it exists) override properties in the non-local file.
          * <p>
@@ -1478,24 +1478,24 @@ public class Config {
          * If none of the files can be found found this method does nothing.
          */
         public void readProjectProperties(File basedir, boolean isTest) throws IOException {
-            File testPropsFile = new File(basedir, "robovm.test.properties");
-            File localPropsFile = new File(basedir, "robovm.local.properties");
-            File propsFile = new File(basedir, "robovm.properties");
+            File testPropsFile = new File(basedir, "flexovm.test.properties");
+            File localPropsFile = new File(basedir, "flexovm.local.properties");
+            File propsFile = new File(basedir, "flexovm.properties");
             if (isTest && testPropsFile.exists()) {
-                config.logger.info("Loading test RoboVM config properties file: "
+                config.logger.info("Loading test FlexoVM config properties file: "
                         + testPropsFile.getAbsolutePath());
                 addProperties(testPropsFile);
             } else {
                 Properties props = new Properties();
                 if (propsFile.exists()) {
-                    config.logger.info("Loading default RoboVM config properties file: "
+                    config.logger.info("Loading default FlexoVM config properties file: "
                             + propsFile.getAbsolutePath());
                     try (Reader reader = new InputStreamReader(new FileInputStream(propsFile), "utf-8")) {
                         props.load(reader);
                     }
                 }
                 if (localPropsFile.exists()) {
-                    config.logger.info("Loading local RoboVM config properties file: "
+                    config.logger.info("Loading local FlexoVM config properties file: "
                             + localPropsFile.getAbsolutePath());
                     try (Reader reader = new InputStreamReader(new FileInputStream(localPropsFile), "utf-8")) {
                         props.load(reader);
@@ -1522,23 +1522,23 @@ public class Config {
         /**
          * Reads a config file from a project basedir. If {@code isTest} is
          * {@code true} this method will first attempt to load a
-         * {@code robovm.test.xml} file in {@code basedir}.
+         * {@code flexovm.test.xml} file in {@code basedir}.
          * <p>
          * If no test-specific file is found or if {@code isTest} is
-         * {@code false} this method attempts to load a {@code robovm.xml} file
+         * {@code false} this method attempts to load a {@code flexovm.xml} file
          * in {@code basedir}.
          * <p>
          * If none of the files can be found found this method does nothing.
          */
         public void readProjectConfig(File basedir, boolean isTest) throws IOException {
-            File testConfigFile = new File(basedir, "robovm.test.xml");
-            File configFile = new File(basedir, "robovm.xml");
+            File testConfigFile = new File(basedir, "flexovm.test.xml");
+            File configFile = new File(basedir, "flexovm.xml");
             if (isTest && testConfigFile.exists()) {
-                config.logger.info("Loading test RoboVM config file: "
+                config.logger.info("Loading test FlexoVM config file: "
                         + testConfigFile.getAbsolutePath());
                 read(testConfigFile);
             } else if (configFile.exists()) {
-                config.logger.info("Loading default RoboVM config file: "
+                config.logger.info("Loading default FlexoVM config file: "
                         + configFile.getAbsolutePath());
                 read(configFile);
             }
